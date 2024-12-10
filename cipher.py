@@ -17,20 +17,22 @@ def encrypt(text, s):
 
     return result
 
-def decrypt(text, s):
-    result = ""
+def decrypt(text):
+    possible_results = []
 
-    for char in text:
-        if char.isupper():
-            result += chr((ord(char) - s - 65) % 26 + 65)
-        elif char.islower():
-            result += chr((ord(char) - s - 97) % 26 + 97)
-        elif char.isdigit():
-            result += chr((ord(char) - s - 48) % 10 + 48)
-        else:
-            result += char
-
-    return result
+    for i in range(26): 
+        result = ""
+        for char in text:
+            if char.isupper():
+                result += chr((ord(char) - i - 65) % 26 + 65)
+            elif char.islower():
+                result += chr((ord(char) - i - 97) % 26 + 97)
+            elif char.isdigit():
+                result += chr((ord(char) - i - 48) % 10 + 48)
+            else:
+                result += char
+        possible_results.append((i, result))
+    return possible_results
 
 while True:
     action = input("1. Encode text\n2. Decode text\n3. Exit\nSelect an action: ")
@@ -47,12 +49,11 @@ while True:
 
     elif action == '2':
         to_decrypt = input("Enter a string to decrypt: ")
-        shift_range2 = int(input("\nHow much was the text shifted (1-25): "))
-        if 1 <= shift_range2 <= 25:
-            print("\nText: " + to_decrypt)
-            print("Cipher: " + decrypt(to_decrypt, shift_range2) + " \n")
-        else:
-            print("Invalid, choose a number between 1 and 25.\n")
+        possible_decryptions = decrypt(to_decrypt)
+        print("\nPossible decryptions:")
+        for shift, decrypted_text in possible_decryptions:
+            print(f"Shift {shift}: {decrypted_text}")
+        print()
     
     elif action == '3':
         confirm_exit = input("Are you sure you want to exit? (yes/no): ")
@@ -63,3 +64,4 @@ while True:
             print("Returning to menu...\n")
     else:
         print("Invalid choice. Please select a valid option.\n")
+
